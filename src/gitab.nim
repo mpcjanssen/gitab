@@ -1,8 +1,9 @@
 import os
 
+proc nakedBrachName(decoratedBranchName: string) : string =
+  return tailDir(decoratedBranchName)
+
 proc main() : void = 
-  proc nakedBrachName(decoratedBranchName: string) : string =
-    return tailDir(decoratedBranchName)
 
   let isGitCode = execShellCmd("git status")
 
