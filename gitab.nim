@@ -1,5 +1,8 @@
 import os
 
+proc nakedBrachName(decoratedBranchName: string) : string =
+  return tailDir(decoratedBranchName)
+
 let isGitCode = execShellCmd("git status")
 
 case isGitCode
@@ -12,7 +15,9 @@ if paramCount() == 0:
   quit("Please specify git branch to archive")
 
 let branch = paramStr(1)
-echo("Archiving ", branch)
+let archiveBranchName = "archive/" & nakedBrachName(branch)
+echo("Archiving ", branch, " to ", archiveBranchName)
+
 
 let isBranch = execShellCmd("git rev-parse --verify --quiet " & branch)
 
@@ -22,7 +27,7 @@ of 0:
 else:
   quit("fatal: Branch " & branch & " doesn't exist", 1)
 
-let archiveTag = "archive/" & tailDir(branch)
+let archiveTag = "archive/" & archiveBranchName
 echo("Tagging as " & archiveTag)
 
 let code = execShellCmd("git tag " & archiveTag & " " & branch)
@@ -32,9 +37,9 @@ if code != 0:
 if execShellCmd("git push --tags") != 0:
   quit("fatal: Push failed", 1)
 
-let remoteDeleteBranch = ":" & tailDir(branch)
+let remoteDeleteBranch = ":" & archiveBranchName
 if execShellCmd("git push origin " & remoteDeleteBranch) != 0:
   quit("fatal: Remote branch delete failed", 1)
 
-if execShellCmd("git branch -D " & tailDir(branch)) != 0:
+if execShellCmd("git branch -D " & archiveBranchName) != 0:
   quit("fatal: Local branch delete failed", 1)
