@@ -1,11 +1,12 @@
-[Package]
-name          = "gitab"
+# Package
+
 version       = "0.0.1"
 author        = "Mark Janssen"
-description   = "Archive a branch by tagging the head and deleting it"
+description   = "Archive remote git branches"
 license       = "MIT"
+bin           = @["src/gitab"]
 
-bin           = "gitab"
+# Dependencies
 
-[Deps]
-Requires: "nim >= 0.15.0"
+requires "nim >= 0.15.0"
+
