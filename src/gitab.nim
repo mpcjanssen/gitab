@@ -23,21 +23,20 @@ proc main() : void =
   else:
     quit("fatal: Branch " & branch & " doesn't exist", 1)
 
-  let archiveTag = "archive/" & archiveBranchName
-  echo("Tagging as " & archiveTag)
+  echo("Tagging as " & archiveBranchName)
 
-  let code = execShellCmd("git tag " & archiveTag & " " & branch)
+  let code = execShellCmd("git tag " & archiveBranchName & " " & branch)
   if code != 0:
     quit("fatal: Tagging failed", 1)
     
   if execShellCmd("git push --tags") != 0:
     quit("fatal: Push failed", 1)
 
-  let remoteDeleteBranch = ":" & archiveBranchName
+  let remoteDeleteBranch = ":" & branch
   if execShellCmd("git push origin " & remoteDeleteBranch) != 0:
     quit("fatal: Remote branch delete failed", 1)
 
-  if execShellCmd("git branch -D " & archiveBranchName) != 0:
+  if execShellCmd("git branch -D " & nakedBrachName(branch)) != 0:
     quit("fatal: Local branch delete failed", 1)
 
 when isMainModule:
