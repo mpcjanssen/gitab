@@ -5,12 +5,7 @@ proc nakedBrachName(decoratedBranchName: string) : string =
 
 proc main() : void = 
 
-  let isGitCode = execShellCmd("git status")
-
-  case isGitCode
-  of 0:
-    echo("Current dir is in git repo")
-  else:
+  if execShellCmd("git status") != 0:
     quit("fatal: Current dir is not in a git repo", 1)
     
   if paramCount() == 0:
@@ -21,10 +16,9 @@ proc main() : void =
   echo("Archiving ", branch, " to ", archiveBranchName)
 
 
-  let isBranch = execShellCmd("git rev-parse --verify --quiet " & branch)
+  let isBranch = execShellCmd("git rev-parse --verify --quiet " & branch) == 0
 
-  case isBranch
-  of 0:
+  if isBranch:
     echo("Archiving branch " & branch)
   else:
     quit("fatal: Branch " & branch & " doesn't exist", 1)
@@ -45,7 +39,6 @@ proc main() : void =
 
   if execShellCmd("git branch -D " & archiveBranchName) != 0:
     quit("fatal: Local branch delete failed", 1)
-
 
 when isMainModule:
   main()
