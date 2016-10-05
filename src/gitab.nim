@@ -13,13 +13,10 @@ proc main() : void =
 
   let branch = paramStr(1)
   let archiveBranchName = "archive/" & nakedBrachName(branch)
-  echo("Archiving ", branch, " to ", archiveBranchName)
-
-
   let isBranch = execShellCmd("git rev-parse --verify --quiet " & branch) == 0
 
   if isBranch:
-    echo("Archiving branch " & branch)
+    echo("Archiving ", branch, " to ", archiveBranchName)
   else:
     quit("fatal: Branch " & branch & " doesn't exist", 1)
 
